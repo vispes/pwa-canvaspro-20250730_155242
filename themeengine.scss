@@ -1,0 +1,40 @@
+@use "sass:map";
+@use "sass:color";
+
+@mixin generate-theme($config) {
+  :root {
+    @include create-theme-variables(map.get($config, "palette"));
+    @include apply-color-scheme("light");
+    
+    @media (prefers-color-scheme: dark) {
+      @include apply-color-scheme("dark");
+    }
+    
+    &[data-color-scheme="dark"] {
+      @include apply-color-scheme("dark");
+    }
+  }
+}
+
+@mixin apply-color-scheme($scheme) {
+  $is-dark: $scheme == "dark";
+  
+  @if $is-dark {
+    --surface: var(--palette-surface-dark);
+    --text-primary: var(--palette-text-dark);
+    --divider: #{rgba(#fff, 0.12)};
+  } @else {
+    --surface: var(--palette-surface-light);
+    --text-primary: var(--palette-text-light);
+    --divider: #{rgba(#000, 0.12)};
+  }
+}
+
+@mixin create-theme-variables($palette) {
+  @each $name, $value in $palette {
+    --palette-#{$name}: #{$value};
+    --palette-#{$name}-text: #{if(color.lightness($value) > 50, #000, #fff)};
+    --palette-#{$name}-hover: #{color.adjust($value, $lightness: 5%)};
+    --palette-#{$name}-active: #{color.adjust($value, $lightness: -5%)};
+  }
+}
