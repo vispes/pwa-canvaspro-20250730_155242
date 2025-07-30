@@ -1,0 +1,70 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebCreator Pro</title>
+    <link rel="manifest" href="/pwamanifest.json">
+    <link rel="stylesheet" href="/src/styles/themeengine.scss">
+    <link rel="stylesheet" href="/src/styles/breakpointmanager.scss">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="/dist/main.css">
+</head>
+<body>
+    <header class="app-header">
+        <h1>WebCreator Pro</h1>
+        <button class="publish-btn" id="publishButton">
+            <i class="material-icons">publish</i>
+            Publish
+        </button>
+    </header>
+
+    <main class="editor-container">
+        <section class="canvas-pane" id="editorCanvas">
+            <div class="toolbar-horizontal">
+                <button class="tool-btn" data-action="undo"><i class="material-icons">undo</i></button>
+                <button class="tool-btn" data-action="redo"><i class="material-icons">redo</i></button>
+                <div class="tool-separator"></div>
+                <button class="tool-btn" data-action="text"><i class="material-icons">text_fields</i></button>
+                <button class="tool-btn" data-action="image"><i class="material-icons">image</i></button>
+            </div>
+            <div class="drop-zone" id="mainWorkspace"></div>
+        </section>
+
+        <section class="preview-pane">
+            <div class="device-preview-toolbar">
+                <div class="device-options">
+                    <button data-device="desktop"><i class="material-icons">desktop_windows</i></button>
+                    <button data-device="tablet"><i class="material-icons">tablet</i></button>
+                    <button data-device="mobile"><i class="material-icons">phone_iphone</i></button>
+                </div>
+            </div>
+            <div class="frame-container" id="previewFrame"></div>
+        </section>
+    </main>
+
+    <footer class="utility-bar">
+        <button class="util-btn" id="toggleLayerPanel">
+            <i class="material-icons">layers</i>
+            Layers
+        </button>
+        <div class="viewport-indicator" id="currentBreakpoint"></div>
+        <button class="util-btn" id="themeToggle">
+            <i class="material-icons">palette</i>
+            Themes
+        </button>
+    </footer>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/serviceworker.js')
+                    .then(registration => console.log('SW registered'))
+                    .catch(err => console.log('SW registration failed'));
+            });
+        }
+    </script>
+    <script type="module" src="/src/state/editorstatemanager.ts"></script>
+    <script type="module" src="/src/components/dragdropeditor.jsx"></script>
+    <script type="module" src="/src/components/devicepreview.jsx"></script>
+</body>
+</html>
