@@ -1,0 +1,47 @@
+@function getBreakpoints() {
+  @return $breakpoints;
+}
+
+@mixin generateViewportHelpers() {
+  [class^="show-"] {
+    display: none !important;
+  }
+
+  $keys: map-keys($breakpoints);
+  @for $i from 1 through length($keys) {
+    $bp-key: nth($keys, $i);
+    $bp-value: map-get($breakpoints, $bp-key);
+    $next-key: if($i < length($keys), nth($keys, $i + 1), null);
+    
+    .show-above-#{$bp-key} {
+      @include respondTo($bp-key) {
+        display: block !important;
+      }
+    }
+
+    .show-below-#{$bp-key} {
+      @media (max-width: $bp-value - 1px) {
+        display: block !important;
+      }
+    }
+
+    .show-only-#{$bp-key} {
+      @if $next-key {
+        $next-value: map-get($breakpoints, $next-key);
+        @media (min-width: $bp-value) and (max-width: $next-value - 1px) {
+          display: block !important;
+        }
+      } @else {
+        @media (min-width: $bp-value) {
+          display: block !important;
+        }
+      }
+    }
+  }
+
+  .show-always {
+    display: block !important;
+  }
+}
+
+@include generateViewportHelpers();
